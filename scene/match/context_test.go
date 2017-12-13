@@ -6,7 +6,7 @@ import (
 	"github.com/hatajoe/hatastone/match"
 )
 
-func TestContextExec(t *testing.T) {
+func TestExec(t *testing.T) {
 	ctx := NewContext(&match.Match{})
 	if err := ctx.Exec(); err != nil {
 		t.Fatal(err)

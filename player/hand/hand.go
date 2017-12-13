@@ -10,11 +10,11 @@ func NewHand() *Hand {
 	return &Hand{}
 }
 
-func (h *Hand) Push(c card.ICard) {
+func (h *Hand) Add(c card.ICard) {
 	h.cards = append(h.cards, c)
 }
 
-func (h *Hand) PopByID(id string) card.ICard {
+func (h *Hand) RemoveByID(id string) card.ICard {
 	c := h.cards.FindByID(id)
 	h.cards.DeleteByID(id)
 	return c

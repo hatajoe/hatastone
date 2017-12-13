@@ -42,17 +42,17 @@ func (m *Match) Marigan(id []string) error {
 }
 
 func (m *Match) handToDeck(id string) error {
-	c := m.hand.PopByID(id)
+	c := m.hand.RemoveByID(id)
 	if c == nil {
 		return fmt.Errorf("PopByID is failed. specified id is %s", id)
 	}
-	m.deck.Push(c)
+	m.deck.Add(c)
 	return nil
 }
 
 func (m *Match) deckToHand() bool {
-	if c := m.deck.Pop(); c != nil {
-		m.hand.Push(c)
+	if c := m.deck.Remove(); c != nil {
+		m.hand.Add(c)
 	} else {
 		return false
 	}

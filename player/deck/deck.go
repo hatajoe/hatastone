@@ -17,11 +17,11 @@ func NewDeck(h hero.IHero, c []card.ICard) *Deck {
 	}
 }
 
-func (d *Deck) Push(c card.ICard) {
+func (d *Deck) Add(c card.ICard) {
 	d.cards = append(d.cards, c)
 }
 
-func (d *Deck) Pop() card.ICard {
+func (d *Deck) Remove() card.ICard {
 	if len(d.cards) <= 0 {
 		return nil
 	}

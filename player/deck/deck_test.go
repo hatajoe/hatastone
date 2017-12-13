@@ -7,7 +7,7 @@ import (
 	"github.com/hatajoe/hatastone/player/hero"
 )
 
-func TestPop(t *testing.T) {
+func TestRemove(t *testing.T) {
 	d := NewDeck(
 		hero.NewMage(),
 		[]card.ICard{
@@ -16,25 +16,25 @@ func TestPop(t *testing.T) {
 			&card.Instant{},
 		},
 	)
-	if actual, ok := d.Pop().(*card.Murloc); !ok {
+	if actual, ok := d.Remove().(*card.Murloc); !ok {
 		t.Fatalf("unexpected card is popped. expected=%T, actual=%T", &card.Murloc{}, actual)
 	}
-	if actual, ok := d.Pop().(*card.Weapon); !ok {
+	if actual, ok := d.Remove().(*card.Weapon); !ok {
 		t.Fatalf("unexpected card is popped. expected=%T, actual=%T", &card.Weapon{}, actual)
 	}
 }
 
-func TestPush(t *testing.T) {
+func TestAdd(t *testing.T) {
 	d := NewDeck(
 		hero.NewMage(),
 		[]card.ICard{},
 	)
-	d.Push(&card.Murloc{})
-	d.Push(&card.Weapon{})
-	if actual, ok := d.Pop().(*card.Murloc); !ok {
+	d.Add(&card.Murloc{})
+	d.Add(&card.Weapon{})
+	if actual, ok := d.Remove().(*card.Murloc); !ok {
 		t.Fatalf("unexpected card is popped. expected=%T, actual=%T", &card.Murloc{}, actual)
 	}
-	if actual, ok := d.Pop().(*card.Weapon); !ok {
+	if actual, ok := d.Remove().(*card.Weapon); !ok {
 		t.Fatalf("unexpected card is popped. expected=%T, actual=%T", &card.Weapon{}, actual)
 	}
 }
