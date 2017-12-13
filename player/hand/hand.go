@@ -10,6 +10,10 @@ func NewHand() *Hand {
 	return &Hand{}
 }
 
+func (h Hand) GetCards() card.Cards {
+	return h.cards
+}
+
 func (h *Hand) Add(c card.ICard) {
 	h.cards = append(h.cards, c)
 }
