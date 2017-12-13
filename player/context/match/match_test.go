@@ -4,9 +4,6 @@ import (
 	"testing"
 
 	"github.com/hatajoe/hatastone/player/card"
-	"github.com/hatajoe/hatastone/player/card/equipment"
-	"github.com/hatajoe/hatastone/player/card/minion"
-	"github.com/hatajoe/hatastone/player/card/spel"
 	"github.com/hatajoe/hatastone/player/deck"
 	"github.com/hatajoe/hatastone/player/discard"
 	"github.com/hatajoe/hatastone/player/field"
@@ -19,9 +16,9 @@ func Test(t *testing.T) {
 		deck.NewDeck(
 			hero.NewMage(),
 			[]card.ICard{
-				minion.NewMurloc(),
-				equipment.NewWeapon(),
-				spel.NewInstant(),
+				card.NewMurloc(card.NewEntity("murloc")),
+				card.NewWeapon(card.NewEntity("weapon")),
+				card.NewInstant(card.NewEntity("instant")),
 			},
 		),
 		hand.NewHand(),
@@ -32,7 +29,13 @@ func Test(t *testing.T) {
 	if !p.Draw() {
 		t.Fatalf("Draw() is failed. deck is empty")
 	}
-	if err := p.Marigan([]int{0, 2}); err != nil {
+	if !p.Draw() {
+		t.Fatalf("Draw() is failed. deck is empty")
+	}
+	if !p.Draw() {
+		t.Fatalf("Draw() is failed. deck is empty")
+	}
+	if err := p.Marigan([]string{"murloc", "instant"}); err != nil {
 		t.Fatalf("Marigan() is failed. %s", err)
 	}
 }

@@ -29,8 +29,8 @@ func (m *Match) Draw() bool {
 	return m.deckToHand()
 }
 
-func (m *Match) Marigan(idx []int) error {
-	for _, i := range idx {
+func (m *Match) Marigan(id []string) error {
+	for _, i := range id {
 		if err := m.handToDeck(i); err != nil {
 			return err
 		}
@@ -41,10 +41,10 @@ func (m *Match) Marigan(idx []int) error {
 	return nil
 }
 
-func (m *Match) handToDeck(idx int) error {
-	c := m.hand.PopByIndex(idx)
+func (m *Match) handToDeck(id string) error {
+	c := m.hand.PopByID(id)
 	if c == nil {
-		return fmt.Errorf("PopByIndex is failed. specified idx is %d", idx)
+		return fmt.Errorf("PopByID is failed. specified id is %s", id)
 	}
 	m.deck.Push(c)
 	return nil

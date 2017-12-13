@@ -4,9 +4,6 @@ import (
 	"testing"
 
 	"github.com/hatajoe/hatastone/player/card"
-	"github.com/hatajoe/hatastone/player/card/equipment"
-	"github.com/hatajoe/hatastone/player/card/minion"
-	"github.com/hatajoe/hatastone/player/card/spel"
 	"github.com/hatajoe/hatastone/player/hero"
 )
 
@@ -14,16 +11,16 @@ func TestPop(t *testing.T) {
 	d := NewDeck(
 		hero.NewMage(),
 		[]card.ICard{
-			minion.NewMurloc(),
-			equipment.NewWeapon(),
-			spel.NewInstant(),
+			&card.Murloc{},
+			&card.Weapon{},
+			&card.Instant{},
 		},
 	)
-	if actual, ok := d.Pop().(*minion.Murloc); !ok {
-		t.Fatalf("unexpected card is popped. expected=%T, actual=%T", &minion.Murloc{}, actual)
+	if actual, ok := d.Pop().(*card.Murloc); !ok {
+		t.Fatalf("unexpected card is popped. expected=%T, actual=%T", &card.Murloc{}, actual)
 	}
-	if actual, ok := d.Pop().(*equipment.Weapon); !ok {
-		t.Fatalf("unexpected card is popped. expected=%T, actual=%T", &equipment.Weapon{}, actual)
+	if actual, ok := d.Pop().(*card.Weapon); !ok {
+		t.Fatalf("unexpected card is popped. expected=%T, actual=%T", &card.Weapon{}, actual)
 	}
 }
 
@@ -32,12 +29,12 @@ func TestPush(t *testing.T) {
 		hero.NewMage(),
 		[]card.ICard{},
 	)
-	d.Push(minion.NewMurloc())
-	d.Push(equipment.NewWeapon())
-	if actual, ok := d.Pop().(*minion.Murloc); !ok {
-		t.Fatalf("unexpected card is popped. expected=%T, actual=%T", &minion.Murloc{}, actual)
+	d.Push(&card.Murloc{})
+	d.Push(&card.Weapon{})
+	if actual, ok := d.Pop().(*card.Murloc); !ok {
+		t.Fatalf("unexpected card is popped. expected=%T, actual=%T", &card.Murloc{}, actual)
 	}
-	if actual, ok := d.Pop().(*equipment.Weapon); !ok {
-		t.Fatalf("unexpected card is popped. expected=%T, actual=%T", &equipment.Weapon{}, actual)
+	if actual, ok := d.Pop().(*card.Weapon); !ok {
+		t.Fatalf("unexpected card is popped. expected=%T, actual=%T", &card.Weapon{}, actual)
 	}
 }

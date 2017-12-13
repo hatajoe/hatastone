@@ -7,7 +7,7 @@ import (
 
 type Deck struct {
 	hero  hero.IHero
-	cards []card.ICard
+	cards card.Cards
 }
 
 func NewDeck(h hero.IHero, c []card.ICard) *Deck {
