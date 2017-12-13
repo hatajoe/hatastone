@@ -38,4 +38,7 @@ func Test(t *testing.T) {
 	if err := p.Marigan([]string{"murloc", "instant"}); err != nil {
 		t.Fatalf("Marigan() is failed. %s", err)
 	}
+	if err := p.Play("murloc", 0); err != nil {
+		t.Fatalf("Play() is failed. %s", err)
+	}
 }

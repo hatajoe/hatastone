@@ -41,6 +41,19 @@ func (m *Match) Marigan(id []string) error {
 	return nil
 }
 
+func (m *Match) Play(id string, pos int) error {
+	return m.handToField(id, pos)
+}
+
+func (m *Match) handToField(id string, pos int) error {
+	c := m.hand.RemoveByID(id)
+	if c == nil {
+		return fmt.Errorf("PopByID is failed. specified id is %s", id)
+	}
+	m.field.Add(c, pos)
+	return nil
+}
+
 func (m *Match) handToDeck(id string) error {
 	c := m.hand.RemoveByID(id)
 	if c == nil {
