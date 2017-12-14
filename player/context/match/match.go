@@ -45,10 +45,18 @@ func (m *Match) Play(id string, pos int) error {
 	return m.handToField(id, pos)
 }
 
+func (m *Match) DiscardFromHand(id string) error {
+	return m.handToDiscard(id)
+}
+
+func (m *Match) DiscardFromField(id string) error {
+	return m.fieldToDiscard(id)
+}
+
 func (m *Match) handToField(id string, pos int) error {
 	c := m.hand.RemoveByID(id)
 	if c == nil {
-		return fmt.Errorf("PopByID is failed. specified id is %s", id)
+		return fmt.Errorf("hand.RemoveByID is failed. specified id is %s", id)
 	}
 	m.field.Add(c, pos)
 	return nil
@@ -57,9 +65,18 @@ func (m *Match) handToField(id string, pos int) error {
 func (m *Match) handToDeck(id string) error {
 	c := m.hand.RemoveByID(id)
 	if c == nil {
-		return fmt.Errorf("PopByID is failed. specified id is %s", id)
+		return fmt.Errorf("hand.RemoveByID is failed. specified id is %s", id)
 	}
 	m.deck.Add(c)
+	return nil
+}
+
+func (m *Match) handToDiscard(id string) error {
+	c := m.hand.RemoveByID(id)
+	if c == nil {
+		return fmt.Errorf("hand.RemoveByID is failed. specified id is %s", id)
+	}
+	m.discard.Add(c)
 	return nil
 }
 
@@ -70,4 +87,13 @@ func (m *Match) deckToHand() bool {
 		return false
 	}
 	return true
+}
+
+func (m *Match) fieldToDiscard(id string) error {
+	c := m.field.RemoveByID(id)
+	if c == nil {
+		return fmt.Errorf("field.RemoveByID is failed. specified id is %s", id)
+	}
+	m.discard.Add(c)
+	return nil
 }

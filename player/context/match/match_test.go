@@ -41,4 +41,10 @@ func Test(t *testing.T) {
 	if err := p.Play("murloc", 0); err != nil {
 		t.Fatalf("Play() is failed. %s", err)
 	}
+	if err := p.DiscardFromHand("weapon"); err != nil {
+		t.Fatalf("DiscardFromHand() is failed. %s", err)
+	}
+	if err := p.DiscardFromField("murloc"); err != nil {
+		t.Fatalf("DiscardFromField() is failed. %s", err)
+	}
 }
