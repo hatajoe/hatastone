@@ -22,11 +22,7 @@ func (f *Field) Add(c card.ICard, pos int) error {
 	if pos < 0 || len(f.cards) < pos {
 		return fmt.Errorf("out of range error. expected <= %d, actual=%d", len(f.cards), pos)
 	}
-	if pos == 0 {
-		f.cards = append(f.cards, c)
-	} else {
-		f.cards = append(f.cards[:pos], append(card.Cards{c}, f.cards[pos:]...)...)
-	}
+	f.cards = append(f.cards[:pos], append(card.Cards{c}, f.cards[pos:]...)...)
 	return nil
 }
 
