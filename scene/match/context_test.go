@@ -2,12 +2,10 @@ package match
 
 import (
 	"testing"
-
-	"github.com/hatajoe/hatastone/match"
 )
 
 func TestExec(t *testing.T) {
-	ctx := NewContext(&match.Match{})
+	ctx := NewContext()
 	if err := ctx.Exec(); err != nil {
 		t.Fatal(err)
 	}

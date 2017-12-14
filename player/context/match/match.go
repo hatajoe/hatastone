@@ -3,6 +3,7 @@ package match
 import (
 	"fmt"
 
+	"github.com/hatajoe/hatastone/player/card"
 	"github.com/hatajoe/hatastone/player/deck"
 	"github.com/hatajoe/hatastone/player/discard"
 	"github.com/hatajoe/hatastone/player/field"
@@ -58,8 +59,11 @@ func (m *Match) handToField(id string, pos int) error {
 	if c == nil {
 		return fmt.Errorf("hand.RemoveByID is failed. specified id is %s", id)
 	}
-	m.field.Add(c, pos)
-	return nil
+	if card, ok := c.(card.IMinion); ok {
+		m.field.Add(card, pos)
+		return nil
+	}
+	return fmt.Errorf("unexpected card specified. id=%s", id)
 }
 
 func (m *Match) handToDeck(id string) error {

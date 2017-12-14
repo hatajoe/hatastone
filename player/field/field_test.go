@@ -8,15 +8,15 @@ import (
 
 func TestAdd(t *testing.T) {
 	expected := card.Cards{
-		card.NewMurloc(card.NewEntity("murloc")),
-		card.NewInstant(card.NewEntity("instant")),
-		card.NewWeapon(card.NewEntity("weapon")),
+		card.NewMurloc("murloc1", 2, 2),
+		card.NewMurloc("murloc2", 2, 2),
+		card.NewMurloc("murloc3", 2, 2),
 	}
 
 	f := NewField()
-	f.Add(card.NewMurloc(card.NewEntity("murloc")), 0)
-	f.Add(card.NewWeapon(card.NewEntity("weapon")), 1)
-	f.Add(card.NewInstant(card.NewEntity("instant")), 1)
+	f.Add(card.NewMurloc("murloc1", 2, 2), 0)
+	f.Add(card.NewMurloc("murloc3", 2, 2), 1)
+	f.Add(card.NewMurloc("murloc2", 2, 2), 1)
 
 	for i, card := range f.GetMinions() {
 		if expected[i].GetID() != card.GetID() {
@@ -26,20 +26,20 @@ func TestAdd(t *testing.T) {
 }
 
 func TestRemoveByID(t *testing.T) {
-	h := NewField()
-	if err := h.Add(card.NewWeapon(card.NewEntity("weapon")), 1); err == nil {
+	f := NewField()
+	if err := f.Add(card.NewMurloc("murloc1", 2, 2), 1); err == nil {
 		t.Fatalf("error shuould be occured")
 	}
-	if err := h.Add(card.NewWeapon(card.NewEntity("weapon")), 0); err != nil {
+	if err := f.Add(card.NewMurloc("murloc1", 2, 2), 0); err != nil {
 		t.Fatalf("unexpected error occured. %s", err)
 	}
-	if actual, ok := h.RemoveByID("weapon").(*card.Weapon); !ok {
-		t.Fatalf("unexpected card is removed. expected=%T, actual=%T", &card.Weapon{}, actual)
+	if actual, ok := f.RemoveByID("murloc1").(*card.Murloc); !ok {
+		t.Fatalf("unexpected card is removed. expected=%T, actual=%T", &card.Murloc{}, actual)
 	}
-	if c := h.RemoveByID("weapon"); c != nil {
+	if c := f.RemoveByID("murloc1"); c != nil {
 		t.Fatalf("unexpected value removed. expected=nil, actual=%T", c)
 	}
-	if c := h.RemoveByID("pirates"); c != nil {
+	if c := f.RemoveByID("pirates"); c != nil {
 		t.Fatalf("unexpected value removed. expected=nil, actual=%T", c)
 	}
 }

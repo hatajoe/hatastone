@@ -1,9 +1,19 @@
 package card
 
 type Weapon struct {
-	*Entity
+	entity
+	atk int
 }
 
-func NewWeapon(e *Entity) *Weapon {
-	return &Weapon{Entity: e}
+func NewWeapon(id string, atk int) *Weapon {
+	return &Weapon{
+		entity: entity{
+			id: id,
+		},
+		atk: atk,
+	}
+}
+
+func (w Weapon) GetAttack() int {
+	return w.atk
 }

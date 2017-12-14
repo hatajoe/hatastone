@@ -1,9 +1,13 @@
 package card
 
 type Interrupt struct {
-	*Entity
+	entity
 }
 
-func NewInterrupt(e *Entity) *Interrupt {
-	return &Interrupt{Entity: e}
+func NewInterrupt(id string) *Interrupt {
+	return &Interrupt{
+		entity: entity{
+			id: id,
+		},
+	}
 }

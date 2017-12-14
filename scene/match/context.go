@@ -1,17 +1,13 @@
 package match
 
-import "github.com/hatajoe/hatastone/match"
-
 // Context saves the state of match
 type Context struct {
-	btl   *match.Match
 	state IState
 }
 
 // NewContext returns Context instance
-func NewContext(b *match.Match) *Context {
+func NewContext() *Context {
 	return &Context{
-		btl:   b,
 		state: &InDraw{},
 	}
 }

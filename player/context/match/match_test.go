@@ -16,9 +16,9 @@ func Test(t *testing.T) {
 		deck.NewDeck(
 			hero.NewMage(),
 			[]card.ICard{
-				card.NewMurloc(card.NewEntity("murloc")),
-				card.NewWeapon(card.NewEntity("weapon")),
-				card.NewInstant(card.NewEntity("instant")),
+				card.NewMurloc("murloc", 2, 2),
+				card.NewWeapon("weapon", 2),
+				card.NewInstant("instant"),
 			},
 		),
 		hand.NewHand(),

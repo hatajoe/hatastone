@@ -1,15 +1,9 @@
 package card
 
-type Entity struct {
+type entity struct {
 	id string
 }
 
-func NewEntity(id string) *Entity {
-	return &Entity{
-		id: id,
-	}
-}
-
-func (e Entity) GetID() string {
+func (e entity) GetID() string {
 	return e.id
 }

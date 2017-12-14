@@ -6,9 +6,9 @@ import (
 
 func TestFindByID(t *testing.T) {
 	c := Cards{
-		NewMurloc(NewEntity("murloc")),
-		NewWeapon(NewEntity("weapon")),
-		NewInstant(NewEntity("instant")),
+		NewMurloc("murloc", 2, 2),
+		NewWeapon("weapon", 2),
+		NewInstant("instant"),
 	}
 	f := c.FindByID("instant")
 	if f == nil {
@@ -21,9 +21,9 @@ func TestFindByID(t *testing.T) {
 
 func TestDeleteByID(t *testing.T) {
 	c := Cards{
-		NewMurloc(NewEntity("murloc")),
-		NewWeapon(NewEntity("weapon")),
-		NewInstant(NewEntity("instant")),
+		NewMurloc("murloc", 2, 2),
+		NewWeapon("weapon", 2),
+		NewInstant("instant"),
 	}
 	f := c.FindByID("instant")
 	if f == nil {

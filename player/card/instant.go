@@ -1,9 +1,13 @@
 package card
 
 type Instant struct {
-	*Entity
+	entity
 }
 
-func NewInstant(e *Entity) *Instant {
-	return &Instant{Entity: e}
+func NewInstant(id string) *Instant {
+	return &Instant{
+		entity: entity{
+			id: id,
+		},
+	}
 }
