@@ -13,12 +13,12 @@ func TestAdd(t *testing.T) {
 		card.NewWeapon(card.NewEntity("weapon")),
 	}
 
-	h := NewField()
-	h.Add(card.NewMurloc(card.NewEntity("murloc")), 0)
-	h.Add(card.NewWeapon(card.NewEntity("weapon")), 1)
-	h.Add(card.NewInstant(card.NewEntity("instant")), 1)
+	f := NewField()
+	f.Add(card.NewMurloc(card.NewEntity("murloc")), 0)
+	f.Add(card.NewWeapon(card.NewEntity("weapon")), 1)
+	f.Add(card.NewInstant(card.NewEntity("instant")), 1)
 
-	for i, card := range h.GetCards() {
+	for i, card := range f.GetMinions() {
 		if expected[i].GetID() != card.GetID() {
 			t.Errorf("field.Add is unexpected behavior. expected=%s, actual=%s", expected[i].GetID(), card.GetID())
 		}

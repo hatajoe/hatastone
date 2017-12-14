@@ -6,6 +6,8 @@ type ICard interface {
 
 type IEquipment interface{}
 
-type IMinion interface{}
+type IMinion interface {
+	ICard
+}
 
 type ISpel interface{}
