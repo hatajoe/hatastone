@@ -18,7 +18,7 @@ func Test(t *testing.T) {
 			[]card.ICard{
 				card.NewMurloc("murloc", 2, 2),
 				card.NewWeapon("weapon", 2),
-				card.NewInstant("instant"),
+				card.NewInstant("instant", 4),
 			},
 		),
 		hand.NewHand(),
