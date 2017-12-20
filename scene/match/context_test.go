@@ -39,6 +39,10 @@ func TestExec(t *testing.T) {
 		discard.NewDiscard(),
 	)
 
+	p1CoinTossCh := make(event.CoinToss)
+	defer close(p1CoinTossCh)
+	p2CoinTossCh := make(event.CoinToss)
+	defer close(p2CoinTossCh)
 	p1DrawCh := make(event.Draw)
 	defer close(p1DrawCh)
 	p2DrawCh := make(event.Draw)
@@ -51,28 +55,40 @@ func TestExec(t *testing.T) {
 		),
 		event.Events{
 			p1DrawCh,
+			p1CoinTossCh,
 		},
 		event.Events{
 			p2DrawCh,
+			p2CoinTossCh,
 		},
 	)
 
 	go func() {
 		for {
 			select {
+			case order, ok := <-p1CoinTossCh:
+				if ok {
+					t.Logf("p1 order is %d", order)
+				}
+			case order, ok := <-p2CoinTossCh:
+				if ok {
+					t.Logf("p2 order is %d", order)
+				}
 			case _, ok := <-p1DrawCh:
 				if ok {
-					if c := p1.Draw(); c == nil {
+					c := p1.Draw()
+					if c == nil {
 						t.Fatal("p1 deck is empty")
 					}
-					t.Log("p1.Draw()")
+					t.Logf("p1 draw %s", c.GetID())
 				}
 			case _, ok := <-p2DrawCh:
 				if ok {
-					if c := p2.Draw(); c == nil {
-						t.Fatal("p1 deck is empty")
+					c := p2.Draw()
+					if c == nil {
+						t.Fatal("p2 deck is empty")
 					}
-					t.Log("p2.Draw()")
+					t.Logf("p2 draw %s", c.GetID())
 				}
 			default:
 			}
@@ -81,7 +97,7 @@ func TestExec(t *testing.T) {
 
 	for ctx.GetState() != nil {
 		if err := ctx.Exec(); err != nil {
-			break
+			t.Fatal(err)
 		}
 	}
 }

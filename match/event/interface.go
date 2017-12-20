@@ -1,10 +1,10 @@
 package event
 
-type EventNotify struct{}
+type IEventNotify interface{}
 
 type IEvent interface {
 	GetID() EventID
-	Emit()
+	Emit(IEventNotify) error
 }
 
 type Events []IEvent

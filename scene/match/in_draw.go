@@ -22,7 +22,9 @@ func (s InDraw) Exec(ctx *Context) error {
 				return fmt.Errorf("event is nil. id is %s", event.GetDrawEventID())
 			}
 			for i := 0; i < 3; i++ {
-				ev.Emit()
+				if err := ev.Emit(event.DrawNotify{}); err != nil {
+					return err
+				}
 			}
 			return nil
 		})
