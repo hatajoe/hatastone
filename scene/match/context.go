@@ -1,7 +1,7 @@
 package match
 
 import (
-	"github.com/hatajoe/hatastone/event"
+	"github.com/hatajoe/hatastone/match/event"
 	"github.com/hatajoe/hatastone/match/rule"
 )
 

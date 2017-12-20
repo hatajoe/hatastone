@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/hatajoe/hatastone/event"
+	"github.com/hatajoe/hatastone/match/event"
 	"github.com/hatajoe/hatastone/match/rule"
 	"github.com/hatajoe/hatastone/player/card"
 	player "github.com/hatajoe/hatastone/player/context/match"

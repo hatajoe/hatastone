@@ -3,7 +3,7 @@ package match
 import (
 	"fmt"
 
-	"github.com/hatajoe/hatastone/event"
+	"github.com/hatajoe/hatastone/match/event"
 	"golang.org/x/sync/errgroup"
 )
 
