@@ -13,6 +13,10 @@ func NewHero(life int) *Hero {
 	}
 }
 
+func (h Hero) IsDead() bool {
+	return h.life <= 0
+}
+
 func (h Hero) GetLife() int {
 	return h.life
 }

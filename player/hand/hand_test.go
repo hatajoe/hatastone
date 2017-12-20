@@ -10,13 +10,13 @@ func TestAdd(t *testing.T) {
 	expected := card.Cards{
 		card.NewMurloc("murloc", 2, 2),
 		card.NewWeapon("weapon", 2),
-		card.NewInstant("instant"),
+		card.NewInstant("instant", 2),
 	}
 
 	h := NewHand()
 	h.Add(card.NewMurloc("murloc", 2, 2))
 	h.Add(card.NewWeapon("weapon", 2))
-	h.Add(card.NewInstant("instant"))
+	h.Add(card.NewInstant("instant", 2))
 
 	for i, card := range h.GetCards() {
 		if expected[i].GetID() != card.GetID() {

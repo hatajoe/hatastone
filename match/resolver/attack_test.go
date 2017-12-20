@@ -9,7 +9,7 @@ import (
 
 func TestResolveAttackMinionToHero(t *testing.T) {
 	murloc := card.NewMurloc("murloc", 2, 2)
-	hero := hero.NewHero(20)
+	hero := hero.NewMage(20)
 	ctx := NewContext(&Attack{})
 	ctx.Resolve(murloc, hero)
 
@@ -20,7 +20,7 @@ func TestResolveAttackMinionToHero(t *testing.T) {
 
 func TestResolveAttackHeroToMinion(t *testing.T) {
 	murloc := card.NewMurloc("murloc", 2, 2)
-	hero := hero.NewHero(20)
+	hero := hero.NewMage(20)
 	ctx := NewContext(&Attack{})
 	ctx.Resolve(hero, murloc)
 
@@ -39,7 +39,7 @@ func TestResolveAttackHeroToMinion(t *testing.T) {
 
 func TestResolveAttackSpelToHero(t *testing.T) {
 	spel := card.NewInstant("instant", 2)
-	hero := hero.NewHero(20)
+	hero := hero.NewMage(20)
 	ctx := NewContext(&Attack{})
 	ctx.Resolve(spel, hero)
 

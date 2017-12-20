@@ -17,6 +17,10 @@ func NewDeck(h hero.IHero, c []card.ICard) *Deck {
 	}
 }
 
+func (d Deck) GetHero() hero.IHero {
+	return d.hero
+}
+
 func (d *Deck) Add(c card.ICard) {
 	d.cards = append(d.cards, c)
 }

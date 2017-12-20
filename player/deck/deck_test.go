@@ -9,7 +9,7 @@ import (
 
 func TestRemove(t *testing.T) {
 	d := NewDeck(
-		hero.NewMage(),
+		hero.NewMage(20),
 		[]card.ICard{
 			&card.Murloc{},
 			&card.Weapon{},
@@ -26,7 +26,7 @@ func TestRemove(t *testing.T) {
 
 func TestAdd(t *testing.T) {
 	d := NewDeck(
-		hero.NewMage(),
+		hero.NewMage(20),
 		[]card.ICard{},
 	)
 	d.Add(&card.Murloc{})

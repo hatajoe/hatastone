@@ -8,6 +8,6 @@ func NewContext(st IStrategy) *Context {
 	return &Context{strategy: st}
 }
 
-func (c Context) Resolve(inf IInfluencer, acc IAccepter) {
+func (c Context) Resolve(inf IInfluencer, acc IAcceptor) {
 	c.strategy.Resolve(inf, acc)
 }

@@ -12,9 +12,10 @@ import (
 )
 
 func Test(t *testing.T) {
-	p := NewMatch(
+	p := NewPlayer(
+		"player1",
 		deck.NewDeck(
-			hero.NewMage(),
+			hero.NewMage(20),
 			[]card.ICard{
 				card.NewMurloc("murloc", 2, 2),
 				card.NewWeapon("weapon", 2),
@@ -26,13 +27,13 @@ func Test(t *testing.T) {
 		discard.NewDiscard(),
 	)
 
-	if !p.Draw() {
+	if c := p.Draw(); c == nil {
 		t.Fatalf("Draw() is failed. deck is empty")
 	}
-	if !p.Draw() {
+	if c := p.Draw(); c == nil {
 		t.Fatalf("Draw() is failed. deck is empty")
 	}
-	if !p.Draw() {
+	if c := p.Draw(); c == nil {
 		t.Fatalf("Draw() is failed. deck is empty")
 	}
 	if err := p.Marigan([]string{"murloc", "instant"}); err != nil {
