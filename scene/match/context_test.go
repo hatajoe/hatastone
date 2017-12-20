@@ -39,8 +39,10 @@ func TestExec(t *testing.T) {
 		discard.NewDiscard(),
 	)
 
-	p1DrawEvent := &event.Draw{}
-	p2DrawEvent := &event.Draw{}
+	p1DrawCh := make(event.Draw)
+	defer close(p1DrawCh)
+	p2DrawCh := make(event.Draw)
+	defer close(p2DrawCh)
 
 	ctx := NewContext(
 		rule.NewRule(
@@ -48,27 +50,29 @@ func TestExec(t *testing.T) {
 			3,
 		),
 		event.Events{
-			p1DrawEvent,
+			p1DrawCh,
 		},
 		event.Events{
-			p2DrawEvent,
+			p2DrawCh,
 		},
 	)
 
 	go func() {
 		for {
 			select {
-			case _, ok := <-p1DrawEvent.GetChannel():
+			case _, ok := <-p1DrawCh:
 				if ok {
 					if c := p1.Draw(); c == nil {
 						t.Fatal("p1 deck is empty")
 					}
+					t.Log("p1.Draw()")
 				}
-			case _, ok := <-p2DrawEvent.GetChannel():
+			case _, ok := <-p2DrawCh:
 				if ok {
 					if c := p2.Draw(); c == nil {
 						t.Fatal("p1 deck is empty")
 					}
+					t.Log("p2.Draw()")
 				}
 			default:
 			}

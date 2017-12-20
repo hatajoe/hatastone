@@ -1,12 +1,9 @@
 package event
 
-type EventChannel chan struct{}
+type EventNotify struct{}
 
 type IEvent interface {
 	GetID() EventID
-	GetChannel() EventChannel
-	Open()
-	Close()
 	Emit()
 }
 

@@ -3,6 +3,6 @@ package match
 type InMarigan struct{}
 
 func (s InMarigan) Exec(ctx *Context) error {
-	ctx.SetState(&InMatch{})
+	ctx.SetState(&InPlay{})
 	return nil
 }

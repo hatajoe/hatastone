@@ -21,9 +21,6 @@ func (s InDraw) Exec(ctx *Context) error {
 			if ev == nil {
 				return fmt.Errorf("event is nil. id is %s", event.GetDrawEventID())
 			}
-			ev.Open()
-			defer ev.Close()
-
 			for i := 0; i < 3; i++ {
 				ev.Emit()
 			}
