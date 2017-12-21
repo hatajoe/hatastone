@@ -7,7 +7,7 @@ import (
 type IPlayer interface {
 	GetID() PlayerID
 	Draw() card.ICard
-	Marigan(id []string) error
+	Marigan(id []string) card.Cards
 	Play(id string, pos int) error
 	IsHeroDead() bool
 	DiscardFromHand(id string) error

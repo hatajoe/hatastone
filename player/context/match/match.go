@@ -26,16 +26,19 @@ func (m *match) Draw() card.ICard {
 	return m.deckToHand()
 }
 
-func (m *match) Marigan(id []string) error {
+func (m *match) Marigan(id []string) card.Cards {
+	ret := card.Cards{}
 	for _, i := range id {
 		if err := m.handToDeck(i); err != nil {
-			return err
+			return ret
 		}
 		if c := m.deckToHand(); c == nil {
-			return fmt.Errorf("Deck is empty")
+			return ret
+		} else {
+			ret = append(ret, c)
 		}
 	}
-	return nil
+	return ret
 }
 
 func (m *match) Play(id string, pos int) error {

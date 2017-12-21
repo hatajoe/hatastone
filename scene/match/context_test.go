@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/hatajoe/hatastone/match/event"
+	"github.com/hatajoe/hatastone/match/proxy"
 	"github.com/hatajoe/hatastone/match/rule"
 	"github.com/hatajoe/hatastone/player/card"
 	player "github.com/hatajoe/hatastone/player/context/match"
@@ -19,9 +20,12 @@ func TestExec(t *testing.T) {
 	p1 := player.NewPlayer(
 		"p1",
 		deck.NewDeck(hero.NewMage(20), []card.ICard{
-			card.NewMurloc("m1", 2, 2),
-			card.NewWeapon("w1", 2),
-			card.NewInstant("i1", 5),
+			card.NewMurloc("p1m1", 2, 2),
+			card.NewWeapon("p1w1", 2),
+			card.NewInstant("p1i1", 5),
+			card.NewMurloc("p1m2", 2, 2),
+			card.NewWeapon("p1w2", 2),
+			card.NewInstant("p1i2", 5),
 		}),
 		hand.NewHand(),
 		field.NewField(),
@@ -30,23 +34,30 @@ func TestExec(t *testing.T) {
 	p2 := player.NewPlayer(
 		"p2",
 		deck.NewDeck(hero.NewMage(20), []card.ICard{
-			card.NewMurloc("m1", 2, 2),
-			card.NewWeapon("w1", 2),
-			card.NewInstant("i1", 5),
+			card.NewMurloc("p1m1", 2, 2),
+			card.NewWeapon("p1w1", 2),
+			card.NewInstant("p1i1", 5),
+			card.NewMurloc("p1m2", 2, 2),
+			card.NewWeapon("p1w2", 2),
+			card.NewInstant("p1i2", 5),
 		}),
 		hand.NewHand(),
 		field.NewField(),
 		discard.NewDiscard(),
 	)
 
-	p1CoinTossCh := make(event.CoinToss)
+	p1CoinTossCh := proxy.NewCoinTossProxy(p1).Listen().(event.CoinToss)
 	defer close(p1CoinTossCh)
-	p2CoinTossCh := make(event.CoinToss)
+	p2CoinTossCh := proxy.NewCoinTossProxy(p2).Listen().(event.CoinToss)
 	defer close(p2CoinTossCh)
-	p1DrawCh := make(event.Draw)
+	p1DrawCh := proxy.NewDrawProxy(p1).Listen().(event.Draw)
 	defer close(p1DrawCh)
-	p2DrawCh := make(event.Draw)
+	p2DrawCh := proxy.NewDrawProxy(p2).Listen().(event.Draw)
 	defer close(p2DrawCh)
+	p1MariganCh := proxy.NewMariganProxy(p1).Listen().(event.Marigan)
+	defer close(p1MariganCh)
+	p2MariganCh := proxy.NewMariganProxy(p2).Listen().(event.Marigan)
+	defer close(p2MariganCh)
 
 	ctx := NewContext(
 		rule.NewRule(
@@ -54,46 +65,16 @@ func TestExec(t *testing.T) {
 			3,
 		),
 		event.Events{
-			p1DrawCh,
 			p1CoinTossCh,
+			p1DrawCh,
+			p1MariganCh,
 		},
 		event.Events{
-			p2DrawCh,
 			p2CoinTossCh,
+			p2DrawCh,
+			p2MariganCh,
 		},
 	)
-
-	go func() {
-		for {
-			select {
-			case order, ok := <-p1CoinTossCh:
-				if ok {
-					t.Logf("p1 order is %d", order)
-				}
-			case order, ok := <-p2CoinTossCh:
-				if ok {
-					t.Logf("p2 order is %d", order)
-				}
-			case _, ok := <-p1DrawCh:
-				if ok {
-					c := p1.Draw()
-					if c == nil {
-						t.Fatal("p1 deck is empty")
-					}
-					t.Logf("p1 draw %s", c.GetID())
-				}
-			case _, ok := <-p2DrawCh:
-				if ok {
-					c := p2.Draw()
-					if c == nil {
-						t.Fatal("p2 deck is empty")
-					}
-					t.Logf("p2 draw %s", c.GetID())
-				}
-			default:
-			}
-		}
-	}()
 
 	for ctx.GetState() != nil {
 		if err := ctx.Exec(); err != nil {
