@@ -2,7 +2,9 @@ package event
 
 import "fmt"
 
-type MariganNotify struct{}
+type MariganNotify struct {
+	notify
+}
 
 type Marigan chan MariganNotify
 

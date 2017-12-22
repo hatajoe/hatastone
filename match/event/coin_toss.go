@@ -2,7 +2,19 @@ package event
 
 import "fmt"
 
-type CoinTossNotify int
+type CoinTossNotify struct {
+	order int
+	notify
+}
+
+func NewCoinTossNotify(order int, done Done) *CoinTossNotify {
+	return &CoinTossNotify{
+		order: order,
+		notify: notify{
+			done: done,
+		},
+	}
+}
 
 type CoinToss chan CoinTossNotify
 

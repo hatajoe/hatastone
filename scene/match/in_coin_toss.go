@@ -23,9 +23,11 @@ func (s InCoinToss) Exec(ctx *Context) error {
 		if ev == nil {
 			return fmt.Errorf("event is nil. id is %s", event.GetCoinTossEventID())
 		}
-		if err := ev.Emit(event.CoinTossNotify(i + 1)); err != nil {
+		d := make(event.Done)
+		if err := ev.Emit(event.NewCoinTossNotify(i, d)); err != nil {
 			return err
 		}
+		<-d
 	}
 
 	ctx.SetState(&InDraw{})

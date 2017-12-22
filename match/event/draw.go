@@ -2,7 +2,9 @@ package event
 
 import "fmt"
 
-type DrawNotify struct{}
+type DrawNotify struct {
+	notify
+}
 
 type Draw chan DrawNotify
 
