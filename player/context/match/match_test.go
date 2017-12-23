@@ -36,8 +36,8 @@ func Test(t *testing.T) {
 	if c := p.Draw(); c == nil {
 		t.Fatalf("Draw() is failed. deck is empty")
 	}
-	if err := p.Marigan([]string{"murloc", "instant"}); err != nil {
-		t.Fatalf("Marigan() is failed. %s", err)
+	if c := p.Marigan([]string{"murloc", "instant"}); len(c) <= 0 {
+		t.Fatalf("Marigan() is failed. deck is empty")
 	}
 	if err := p.Play("murloc", 0); err != nil {
 		t.Fatalf("Play() is failed. %s", err)

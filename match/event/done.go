@@ -1,10 +1,12 @@
 package event
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type DoneNotify struct{}
 
-type Done chan DoneNotify
+type Done chan *DoneNotify
 
 func GetDoneEventID() EventID {
 	return EventID("doneEvent")
@@ -15,7 +17,7 @@ func (e Done) GetID() EventID {
 }
 
 func (e Done) Emit(in IEventNotify) error {
-	n, ok := in.(DoneNotify)
+	n, ok := in.(*DoneNotify)
 	if !ok {
 		return fmt.Errorf("unexpected event notify specified. expected=DoneNotify, actual=%s", n)
 	}

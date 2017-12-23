@@ -5,6 +5,7 @@ import (
 	"math/rand"
 
 	"github.com/hatajoe/hatastone/match/event"
+	"golang.org/x/sync/errgroup"
 )
 
 type InCoinToss struct{}
@@ -15,21 +16,30 @@ func (s InCoinToss) Exec(ctx *Context) error {
 		ctx.SwapPlayOrder()
 	}
 
+	eg := errgroup.Group{}
 	for i, e := range []event.Events{
 		ctx.GetFirst(),
 		ctx.GetAfter(),
 	} {
-		ev := e.FindByID(event.GetCoinTossEventID())
-		if ev == nil {
-			return fmt.Errorf("event is nil. id is %s", event.GetCoinTossEventID())
-		}
-		d := make(event.Done)
-		if err := ev.Emit(event.NewCoinTossNotify(i, d)); err != nil {
-			return err
-		}
-		<-d
+		events := e
+		order := i
+		eg.Go(func() error {
+			ev := events.FindByID(event.GetCoinTossEventID())
+			if ev == nil {
+				return fmt.Errorf("event is nil. id is %s", event.GetCoinTossEventID())
+			}
+			d := make(event.Done)
+			defer close(d)
+			if err := ev.Emit(event.NewCoinTossNotify(order, d)); err != nil {
+				return err
+			}
+			<-d
+			return nil
+		})
 	}
-
+	if err := eg.Wait(); err != nil {
+		return err
+	}
 	ctx.SetState(&InDraw{})
 	return nil
 }

@@ -5,5 +5,5 @@ type notify struct {
 }
 
 func (n notify) Done() {
-	n.done.Emit(DoneNotify{})
+	n.done.Emit(&DoneNotify{})
 }

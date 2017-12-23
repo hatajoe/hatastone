@@ -21,9 +21,12 @@ func (s InMarigan) Exec(ctx *Context) error {
 			if ev == nil {
 				return fmt.Errorf("event is nil. id is %s", event.GetMariganEventID())
 			}
-			if err := ev.Emit(event.MariganNotify{}); err != nil {
+			d := make(event.Done)
+			defer close(d)
+			if err := ev.Emit(event.NewMariganNotify(d)); err != nil {
 				return err
 			}
+			<-d
 			return nil
 		})
 	}

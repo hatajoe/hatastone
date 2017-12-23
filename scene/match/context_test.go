@@ -46,17 +46,26 @@ func TestExec(t *testing.T) {
 		discard.NewDiscard(),
 	)
 
-	p1CoinTossCh := proxy.NewCoinTossProxy(p1).Listen().(event.CoinToss)
+	err := make(chan error)
+
+	go func() {
+		for e := range err {
+			t.Fatal(e)
+			close(err)
+		}
+	}()
+
+	p1CoinTossCh := proxy.NewCoinTossProxy(p1, err).Listen().(event.CoinToss)
 	defer close(p1CoinTossCh)
-	p2CoinTossCh := proxy.NewCoinTossProxy(p2).Listen().(event.CoinToss)
+	p2CoinTossCh := proxy.NewCoinTossProxy(p2, err).Listen().(event.CoinToss)
 	defer close(p2CoinTossCh)
-	p1DrawCh := proxy.NewDrawProxy(p1).Listen().(event.Draw)
+	p1DrawCh := proxy.NewDrawProxy(p1, err).Listen().(event.Draw)
 	defer close(p1DrawCh)
-	p2DrawCh := proxy.NewDrawProxy(p2).Listen().(event.Draw)
+	p2DrawCh := proxy.NewDrawProxy(p2, err).Listen().(event.Draw)
 	defer close(p2DrawCh)
-	p1MariganCh := proxy.NewMariganProxy(p1).Listen().(event.Marigan)
+	p1MariganCh := proxy.NewMariganProxy(p1, err).Listen().(event.Marigan)
 	defer close(p1MariganCh)
-	p2MariganCh := proxy.NewMariganProxy(p2).Listen().(event.Marigan)
+	p2MariganCh := proxy.NewMariganProxy(p2, err).Listen().(event.Marigan)
 	defer close(p2MariganCh)
 
 	ctx := NewContext(

@@ -1,5 +1,7 @@
 package event
 
+type EventID string
+
 type IEventNotify interface{}
 
 type IEvent interface {

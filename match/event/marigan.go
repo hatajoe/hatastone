@@ -6,7 +6,15 @@ type MariganNotify struct {
 	notify
 }
 
-type Marigan chan MariganNotify
+func NewMariganNotify(done Done) *MariganNotify {
+	return &MariganNotify{
+		notify: notify{
+			done: done,
+		},
+	}
+}
+
+type Marigan chan *MariganNotify
 
 func GetMariganEventID() EventID {
 	return EventID("mariganEvent")
@@ -17,7 +25,7 @@ func (e Marigan) GetID() EventID {
 }
 
 func (e Marigan) Emit(in IEventNotify) error {
-	n, ok := in.(MariganNotify)
+	n, ok := in.(*MariganNotify)
 	if !ok {
 		return fmt.Errorf("unexpected event notify specified. expected=MariganNotify, actual=%s", n)
 	}
