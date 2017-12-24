@@ -11,3 +11,7 @@ func NewMage(life int) *Mage {
 		},
 	}
 }
+
+func (h Mage) GetID() string {
+	return "mage"
+}

@@ -12,8 +12,8 @@ type InMarigan struct{}
 func (s InMarigan) Exec(ctx *Context) error {
 	eg := errgroup.Group{}
 	for _, e := range []event.Events{
-		ctx.GetFirst(),
-		ctx.GetAfter(),
+		ctx.GetFirstEvent(),
+		ctx.GetAfterEvent(),
 	} {
 		events := e
 		eg.Go(func() error {

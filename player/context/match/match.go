@@ -8,6 +8,7 @@ import (
 	"github.com/hatajoe/hatastone/player/discard"
 	"github.com/hatajoe/hatastone/player/field"
 	"github.com/hatajoe/hatastone/player/hand"
+	"github.com/hatajoe/hatastone/player/hero"
 )
 
 type match struct {
@@ -41,8 +42,16 @@ func (m *match) Marigan(id []string) card.Cards {
 	return ret
 }
 
-func (m *match) Play(id string, pos int) error {
+func (m *match) Play(id string, pos int) (card.ICard, error) {
 	return m.handToField(id, pos)
+}
+
+func (m match) FindFieldMinionByID(id string) card.IMinion {
+	return m.field.FindByID(id)
+}
+
+func (m match) ShowHands() card.Cards {
+	return m.hand.GetCards()
 }
 
 func (m *match) DiscardFromHand(id string) error {
@@ -53,20 +62,24 @@ func (m *match) DiscardFromField(id string) error {
 	return m.fieldToDiscard(id)
 }
 
+func (m *match) GetHero() hero.IHero {
+	return m.deck.GetHero()
+}
+
 func (m match) IsHeroDead() bool {
 	return m.deck.GetHero().IsDead()
 }
 
-func (m *match) handToField(id string, pos int) error {
+func (m *match) handToField(id string, pos int) (card.ICard, error) {
 	c := m.hand.RemoveByID(id)
 	if c == nil {
-		return fmt.Errorf("hand.RemoveByID is failed. specified id is %s", id)
+		return nil, fmt.Errorf("hand.RemoveByID is failed. specified id is %s", id)
 	}
 	if card, ok := c.(card.IMinion); ok {
 		m.field.Add(card, pos)
-		return nil
+		return card, nil
 	}
-	return fmt.Errorf("unexpected card specified. id=%s", id)
+	return nil, fmt.Errorf("unexpected card specified. id=%s", id)
 }
 
 func (m *match) handToDeck(id string) error {

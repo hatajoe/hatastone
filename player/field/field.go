@@ -31,3 +31,12 @@ func (f *Field) RemoveByID(id string) card.IMinion {
 	f.cards.DeleteByID(id)
 	return c
 }
+
+func (f *Field) FindByID(id string) card.IMinion {
+	for _, m := range f.cards {
+		if m.GetID() == id {
+			return m
+		}
+	}
+	return nil
+}

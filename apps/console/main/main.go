@@ -1,7 +1,6 @@
-package match
+package main
 
 import (
-	"testing"
 	"time"
 
 	"github.com/hatajoe/hatastone/apps/console"
@@ -15,9 +14,10 @@ import (
 	"github.com/hatajoe/hatastone/player/field"
 	"github.com/hatajoe/hatastone/player/hand"
 	"github.com/hatajoe/hatastone/player/hero"
+	"github.com/hatajoe/hatastone/scene/match"
 )
 
-func TestExec(t *testing.T) {
+func main() {
 	p1 := player.NewPlayer(
 		"p1",
 		deck.NewDeck(hero.NewMage(20), []card.ICard{
@@ -66,7 +66,7 @@ func TestExec(t *testing.T) {
 	p2PlayCh := proxy.NewPlayProxy(p2).Listen(r, w).(event.Play)
 	defer close(p2PlayCh)
 
-	ctx := NewContext(
+	ctx := match.NewContext(
 		rule.NewRule(
 			time.Now().UnixNano(),
 			3,
@@ -89,7 +89,7 @@ func TestExec(t *testing.T) {
 
 	for ctx.GetState() != nil {
 		if err := ctx.Exec(); err != nil {
-			t.Fatal(err)
+			panic(err)
 		}
 	}
 }

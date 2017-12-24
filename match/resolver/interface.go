@@ -5,9 +5,11 @@ type IStrategy interface {
 }
 
 type IInfluencer interface {
+	GetID() string
 	GetAttack() int
 }
 
 type IAcceptor interface {
+	GetID() string
 	AcceptAttack(damage int)
 }

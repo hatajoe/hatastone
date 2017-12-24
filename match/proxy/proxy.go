@@ -5,6 +5,5 @@ import (
 )
 
 type proxy struct {
-	p   match.IPlayer
-	err chan error
+	p match.IPlayer
 }

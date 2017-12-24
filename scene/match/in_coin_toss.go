@@ -18,11 +18,11 @@ func (s InCoinToss) Exec(ctx *Context) error {
 
 	eg := errgroup.Group{}
 	for i, e := range []event.Events{
-		ctx.GetFirst(),
-		ctx.GetAfter(),
+		ctx.GetFirstEvent(),
+		ctx.GetAfterEvent(),
 	} {
 		events := e
-		order := i
+		order := i + 1
 		eg.Go(func() error {
 			ev := events.FindByID(event.GetCoinTossEventID())
 			if ev == nil {

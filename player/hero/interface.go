@@ -3,6 +3,7 @@ package hero
 import "github.com/hatajoe/hatastone/player/card"
 
 type IHero interface {
+	GetID() string
 	GetLife() int
 	IsDead() bool
 	GetEquipment() card.IEquipment

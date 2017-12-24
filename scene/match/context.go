@@ -3,22 +3,31 @@ package match
 import (
 	"github.com/hatajoe/hatastone/match/event"
 	"github.com/hatajoe/hatastone/match/rule"
+	player "github.com/hatajoe/hatastone/player/context/match"
 )
 
 type Context struct {
-	rule  rule.IRule   // match rule
-	first event.Events // first player event listeners
-	after event.Events // after player event listeners
+	rule        rule.IRule // match rule
+	firstPlayer player.IPlayer
+	firstEvent  event.Events // first player event listeners
+	afterPlayer player.IPlayer
+	afterEvent  event.Events // after player event listeners
 
-	state IState // game state
+	currentPlayer player.IPlayer
+	currentEvents event.Events
+	state         IState // game state
 }
 
-func NewContext(rule rule.IRule, first, after event.Events) *Context {
+func NewContext(rule rule.IRule, firstPlayer, afterPlayer player.IPlayer, firstEvent, afterEvent event.Events) *Context {
 	return &Context{
-		rule:  rule,
-		first: first,
-		after: after,
-		state: &InCoinToss{},
+		rule:          rule,
+		firstPlayer:   firstPlayer,
+		firstEvent:    firstEvent,
+		afterPlayer:   afterPlayer,
+		afterEvent:    afterEvent,
+		currentPlayer: firstPlayer,
+		currentEvents: firstEvent,
+		state:         &InCoinToss{},
 	}
 }
 
@@ -34,18 +43,40 @@ func (c Context) GetState() IState {
 	return c.state
 }
 
+func (c Context) GetOpponent() player.IPlayer {
+	if c.firstPlayer.GetID() != c.currentPlayer.GetID() {
+		return c.firstPlayer
+	}
+	return c.afterPlayer
+}
+
 func (c Context) GetSeed() int64 {
 	return c.rule.GetSeed()
 }
 
-func (c Context) GetFirst() event.Events {
-	return c.first
+func (c Context) GetFirstEvent() event.Events {
+	return c.firstEvent
 }
 
-func (c Context) GetAfter() event.Events {
-	return c.after
+func (c Context) GetAfterEvent() event.Events {
+	return c.afterEvent
+}
+
+func (c Context) GetCurrentEvents() event.Events {
+	return c.currentEvents
+}
+
+func (c *Context) SwitchCurrentPlayer() player.IPlayer {
+	if c.currentPlayer.GetID() == c.firstPlayer.GetID() {
+		c.currentPlayer = c.afterPlayer
+		c.currentEvents = c.afterEvent
+		return c.currentPlayer
+	}
+	c.currentPlayer = c.firstPlayer
+	c.currentEvents = c.firstEvent
+	return c.currentPlayer
 }
 
 func (c *Context) SwapPlayOrder() {
-	c.first, c.after = c.after, c.first
+	c.firstEvent, c.afterEvent = c.afterEvent, c.firstEvent
 }
