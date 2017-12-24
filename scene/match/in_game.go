@@ -2,10 +2,8 @@ package match
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/hatajoe/hatastone/match/event"
-	"github.com/hatajoe/hatastone/match/proxy"
 )
 
 type InGame struct{}
@@ -24,9 +22,7 @@ func (s InGame) Exec(ctx *Context) error {
 				return fmt.Errorf("event is nil. id is %s", event.GetGameEventID())
 			}
 			d := make(event.Done)
-			if err := ev.Emit(event.NewGameNotify(ctx.GetOpponent(), event.Events{
-				resolve(),
-			}, d)); err != nil {
+			if err := ev.Emit(event.NewGameNotify(ctx.GetOpponent(), d)); err != nil {
 				close(d)
 				continue
 			}
@@ -54,16 +50,4 @@ func draw(events event.Events) error {
 	<-d
 	close(d)
 	return nil
-}
-
-func resolve() event.IEvent {
-	err := make(chan error)
-	go func() {
-		for e := range err {
-			log.Println(e)
-		}
-	}()
-	resolver := proxy.NewResolveProxy(err)
-
-	return resolver.Listen(nil)
 }

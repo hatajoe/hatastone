@@ -8,14 +8,12 @@ import (
 
 type GameNotify struct {
 	opponent player.IPlayer
-	events   Events
 	notify
 }
 
-func NewGameNotify(op player.IPlayer, events Events, done Done) *GameNotify {
+func NewGameNotify(op player.IPlayer, done Done) *GameNotify {
 	return &GameNotify{
 		opponent: op,
-		events:   events,
 		notify: notify{
 			done: done,
 		},
@@ -24,10 +22,6 @@ func NewGameNotify(op player.IPlayer, events Events, done Done) *GameNotify {
 
 func (p GameNotify) GetOpponent() player.IPlayer {
 	return p.opponent
-}
-
-func (p GameNotify) GetEvents() Events {
-	return p.events
 }
 
 type Game chan *GameNotify

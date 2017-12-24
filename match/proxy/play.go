@@ -1,8 +1,6 @@
 package proxy
 
 import (
-	"fmt"
-
 	"github.com/hatajoe/hatastone/apps"
 	"github.com/hatajoe/hatastone/match/event"
 	"github.com/hatajoe/hatastone/match/protocol"
@@ -27,42 +25,31 @@ func (p *PlayProxy) Listen(ctrl apps.Controller) event.IEvent {
 
 	go func() {
 		for n := range ch {
-			ctrl.Write(protocol.NewGameWrite(p.p, n.GetOpponent(), nil))
+			ctrl.Write(protocol.NewPlayWrite(p.p, n.GetOpponent(), nil))
 			it, err := ctrl.Read()
 			if err != nil {
-				ctrl.Write(protocol.NewGameWrite(nil, nil, err))
-				n.Done()
-				continue
-			}
-			reader, ok := it.(*protocol.GameRead)
-			if !ok {
-				ctrl.Write(protocol.NewGameWrite(nil, nil, fmt.Errorf("unexpected type specified. expected=*protocol.PlayRead, actual=%T", reader)))
+				ctrl.Write(protocol.NewPlayWrite(nil, nil, err))
 				n.Done()
 				continue
 			}
 
-			_, err = p.p.Play(reader.GetID(), reader.GetPos())
-			if err != nil {
-				ctrl.Write(protocol.NewGameWrite(nil, nil, err))
+			switch reader := it.(type) {
+			case *protocol.PlayRead:
+				_, err = p.p.Play(reader.GetID(), reader.GetPos())
+				if err != nil {
+					ctrl.Write(protocol.NewPlayWrite(nil, nil, err))
+					n.Done()
+					continue
+				}
+			case *protocol.ResolveRead:
+				resolver.NewContext(&resolver.Attack{}).Resolve(p.p.FindFieldMinionByID(reader.GetInfluencerID()), n.GetOpponent().GetHero())
+			default:
+				ctrl.Write(protocol.NewPlayWrite(nil, nil, err))
 				n.Done()
 				continue
 			}
-
-			events := n.GetEvents()
-			ev := events.FindByID(event.GetResolveEventID())
-			if ev == nil {
-				ctrl.Write(protocol.NewGameWrite(nil, nil, fmt.Errorf("event is nil. id is %s", event.GetResolveEventID())))
-				n.Done()
-				continue
-			}
-			d := make(event.Done)
-			if err := ev.Emit(event.NewResolveNotify(&resolver.Attack{}, p.p.FindFieldMinionByID(reader.GetID()), n.GetOpponent().GetHero(), d)); err != nil {
-				ctrl.Write(protocol.NewGameWrite(nil, nil, err))
-			}
-			<-d
-			close(d)
 			n.Done()
-			ctrl.Write(protocol.NewGameWrite(p.p, n.GetOpponent(), nil))
+			ctrl.Write(protocol.NewPlayWrite(p.p, n.GetOpponent(), nil))
 		}
 	}()
 
