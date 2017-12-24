@@ -13,7 +13,7 @@ func (c Draw) Read() (interface{}, error) {
 }
 
 func (c Draw) Write(it interface{}) error {
-	d, ok := it.(*protocol.DrawProtocol)
+	d, ok := it.(*protocol.DrawWrite)
 	if !ok {
 		return fmt.Errorf("unexpected protocol specified. expected is *proxy.DrawProtocol, actual=%T", d)
 	}

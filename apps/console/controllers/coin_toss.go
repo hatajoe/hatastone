@@ -13,7 +13,7 @@ func (c CoinToss) Read() (interface{}, error) {
 }
 
 func (c CoinToss) Write(it interface{}) error {
-	d, ok := it.(*protocol.CoinTossProtocol)
+	d, ok := it.(*protocol.CoinTossWrite)
 	if !ok {
 		return fmt.Errorf("unexpected protocol specified. expected is *proxy.CoinTossProtocol, actual=%T", d)
 	}

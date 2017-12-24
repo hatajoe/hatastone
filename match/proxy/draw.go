@@ -25,7 +25,7 @@ func (p *DrawProxy) Listen(ctrl apps.Controller) event.IEvent {
 	go func() {
 		for n := range ch {
 			c := p.p.Draw()
-			ctrl.Write(protocol.NewDrawProtocol(p.p, c))
+			ctrl.Write(protocol.NewDrawWrite(p.p, c))
 			n.Done()
 		}
 	}()

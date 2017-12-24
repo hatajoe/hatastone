@@ -24,7 +24,7 @@ func (p *CoinTossProxy) Listen(ctrl apps.Controller) event.IEvent {
 
 	go func() {
 		for n := range ch {
-			ctrl.Write(protocol.NewCoinTossProtocol(p.p, n.GetOrder()))
+			ctrl.Write(protocol.NewCoinTossWrite(p.p, n.GetOrder()))
 			n.Done()
 		}
 	}()

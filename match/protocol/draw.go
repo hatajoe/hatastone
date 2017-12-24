@@ -5,14 +5,14 @@ import (
 	"github.com/hatajoe/hatastone/player/context/match"
 )
 
-type DrawProtocol struct {
+type DrawWrite struct {
 	Protocol
 	Player match.IPlayer
 	Card   card.ICard
 }
 
-func NewDrawProtocol(p match.IPlayer, c card.ICard) *DrawProtocol {
-	return &DrawProtocol{
+func NewDrawWrite(p match.IPlayer, c card.ICard) *DrawWrite {
+	return &DrawWrite{
 		Protocol: Protocol{
 			Err: nil,
 		},
