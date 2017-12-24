@@ -1,13 +1,13 @@
 package card
 
 type Interrupt struct {
-	entity
+	Entity
 }
 
 func NewInterrupt(id string) *Interrupt {
 	return &Interrupt{
-		entity: entity{
-			id: id,
+		Entity: Entity{
+			ID: id,
 		},
 	}
 }

@@ -11,23 +11,23 @@ import (
 	"github.com/hatajoe/hatastone/player/hero"
 )
 
-type match struct {
-	id      PlayerID
-	deck    deck.IDeck
-	hand    hand.IHand
-	field   field.IField
-	discard discard.IDiscard
+type Match struct {
+	ID      PlayerID
+	Deck    deck.IDeck
+	Hand    hand.IHand
+	Field   field.IField
+	Discard discard.IDiscard
 }
 
-func (m *match) GetID() PlayerID {
-	return m.id
+func (m *Match) GetID() PlayerID {
+	return m.ID
 }
 
-func (m *match) Draw() card.ICard {
+func (m *Match) Draw() card.ICard {
 	return m.deckToHand()
 }
 
-func (m *match) Marigan(id []string) card.Cards {
+func (m *Match) Marigan(id []string) card.Cards {
 	ret := card.Cards{}
 	for _, i := range id {
 		if err := m.handToDeck(i); err != nil {
@@ -42,77 +42,77 @@ func (m *match) Marigan(id []string) card.Cards {
 	return ret
 }
 
-func (m *match) Play(id string, pos int) (card.ICard, error) {
+func (m *Match) Play(id string, pos int) (card.ICard, error) {
 	return m.handToField(id, pos)
 }
 
-func (m match) FindFieldMinionByID(id string) card.IMinion {
-	return m.field.FindByID(id)
+func (m Match) FindFieldMinionByID(id string) card.IMinion {
+	return m.Field.FindByID(id)
 }
 
-func (m match) ShowHands() card.Cards {
-	return m.hand.GetCards()
+func (m Match) GetHand() hand.IHand {
+	return m.Hand
 }
 
-func (m *match) DiscardFromHand(id string) error {
+func (m *Match) DiscardFromHand(id string) error {
 	return m.handToDiscard(id)
 }
 
-func (m *match) DiscardFromField(id string) error {
+func (m *Match) DiscardFromField(id string) error {
 	return m.fieldToDiscard(id)
 }
 
-func (m *match) GetHero() hero.IHero {
-	return m.deck.GetHero()
+func (m *Match) GetHero() hero.IHero {
+	return m.Deck.GetHero()
 }
 
-func (m match) IsHeroDead() bool {
-	return m.deck.GetHero().IsDead()
+func (m Match) IsHeroDead() bool {
+	return m.Deck.GetHero().IsDead()
 }
 
-func (m *match) handToField(id string, pos int) (card.ICard, error) {
-	c := m.hand.RemoveByID(id)
+func (m *Match) handToField(id string, pos int) (card.ICard, error) {
+	c := m.Hand.RemoveByID(id)
 	if c == nil {
 		return nil, fmt.Errorf("hand.RemoveByID is failed. specified id is %s", id)
 	}
 	if card, ok := c.(card.IMinion); ok {
-		m.field.Add(card, pos)
+		m.Field.Add(card, pos)
 		return card, nil
 	}
 	return nil, fmt.Errorf("unexpected card specified. id=%s", id)
 }
 
-func (m *match) handToDeck(id string) error {
-	c := m.hand.RemoveByID(id)
+func (m *Match) handToDeck(id string) error {
+	c := m.Hand.RemoveByID(id)
 	if c == nil {
 		return fmt.Errorf("hand.RemoveByID is failed. specified id is %s", id)
 	}
-	m.deck.Add(c)
+	m.Deck.Add(c)
 	return nil
 }
 
-func (m *match) handToDiscard(id string) error {
-	c := m.hand.RemoveByID(id)
+func (m *Match) handToDiscard(id string) error {
+	c := m.Hand.RemoveByID(id)
 	if c == nil {
 		return fmt.Errorf("hand.RemoveByID is failed. specified id is %s", id)
 	}
-	m.discard.Add(c)
+	m.Discard.Add(c)
 	return nil
 }
 
-func (m *match) deckToHand() card.ICard {
-	if c := m.deck.Remove(); c != nil {
-		m.hand.Add(c)
+func (m *Match) deckToHand() card.ICard {
+	if c := m.Deck.Remove(); c != nil {
+		m.Hand.Add(c)
 		return c
 	}
 	return nil
 }
 
-func (m *match) fieldToDiscard(id string) error {
-	c := m.field.RemoveByID(id)
+func (m *Match) fieldToDiscard(id string) error {
+	c := m.Field.RemoveByID(id)
 	if c == nil {
 		return fmt.Errorf("field.RemoveByID is failed. specified id is %s", id)
 	}
-	m.discard.Add(c)
+	m.Discard.Add(c)
 	return nil
 }

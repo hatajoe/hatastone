@@ -77,6 +77,10 @@ func (c *Context) SwitchCurrentPlayer() player.IPlayer {
 	return c.currentPlayer
 }
 
+func (c Context) IsHeroDead() bool {
+	return c.firstPlayer.IsHeroDead() || c.afterPlayer.IsHeroDead()
+}
+
 func (c *Context) SwapPlayOrder() {
 	c.firstEvent, c.afterEvent = c.afterEvent, c.firstEvent
 }

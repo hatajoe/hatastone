@@ -1,9 +1,9 @@
 package match
 
 type NonPlayer struct {
-	*match
+	*Match
 }
 
-func NewNonPlayer(m *match) *NonPlayer {
-	return &NonPlayer{match: m}
+func NewNonPlayer(m *Match) *NonPlayer {
+	return &NonPlayer{Match: m}
 }

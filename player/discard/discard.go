@@ -3,7 +3,7 @@ package discard
 import "github.com/hatajoe/hatastone/player/card"
 
 type Discard struct {
-	cards card.Cards
+	Cards card.Cards
 }
 
 func NewDiscard() *Discard {
@@ -11,9 +11,9 @@ func NewDiscard() *Discard {
 }
 
 func (d Discard) GetCards() card.Cards {
-	return d.cards
+	return d.Cards
 }
 
 func (d *Discard) Add(c card.ICard) {
-	d.cards = append(card.Cards{c}, d.cards...)
+	d.Cards = append(card.Cards{c}, d.Cards...)
 }

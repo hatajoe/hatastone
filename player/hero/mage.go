@@ -7,7 +7,7 @@ type Mage struct {
 func NewMage(life int) *Mage {
 	return &Mage{
 		Hero: Hero{
-			life: life,
+			Life: life,
 		},
 	}
 }

@@ -8,17 +8,17 @@ import (
 )
 
 type Player struct {
-	match
+	Match
 }
 
 func NewPlayer(id PlayerID, dc deck.IDeck, hn hand.IHand, fl field.IField, ds discard.IDiscard) *Player {
 	return &Player{
-		match: match{
-			id:      id,
-			deck:    dc,
-			hand:    hn,
-			field:   fl,
-			discard: ds,
+		Match: Match{
+			ID:      id,
+			Deck:    dc,
+			Hand:    hn,
+			Field:   fl,
+			Discard: ds,
 		},
 	}
 }

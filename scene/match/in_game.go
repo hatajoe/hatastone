@@ -8,29 +8,32 @@ import (
 	"github.com/hatajoe/hatastone/match/proxy"
 )
 
-type InPlay struct{}
+type InGame struct{}
 
-func (s InPlay) Exec(ctx *Context) error {
-	for i := 0; i < 2; i++ {
+func (s InGame) Exec(ctx *Context) error {
+	for !ctx.IsHeroDead() {
 		e := ctx.GetCurrentEvents()
 
 		if err := draw(e); err != nil {
 			return err
 		}
 
-		ev := e.FindByID(event.GetPlayEventID())
-		if ev == nil {
-			return fmt.Errorf("event is nil. id is %s", event.GetPlayEventID())
-		}
-		d := make(event.Done)
-		if err := ev.Emit(event.NewPlayNotify(ctx.GetOpponent(), event.Events{
-			resolve(),
-		}, d)); err != nil {
+		for {
+			ev := e.FindByID(event.GetGameEventID())
+			if ev == nil {
+				return fmt.Errorf("event is nil. id is %s", event.GetGameEventID())
+			}
+			d := make(event.Done)
+			if err := ev.Emit(event.NewGameNotify(ctx.GetOpponent(), event.Events{
+				resolve(),
+			}, d)); err != nil {
+				close(d)
+				continue
+			}
+			<-d
 			close(d)
-			return err
+			break
 		}
-		<-d
-		close(d)
 
 		ctx.SwitchCurrentPlayer()
 	}
@@ -62,5 +65,5 @@ func resolve() event.IEvent {
 	}()
 	resolver := proxy.NewResolveProxy(err)
 
-	return resolver.Listen(nil, nil)
+	return resolver.Listen(nil)
 }

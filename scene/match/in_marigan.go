@@ -34,6 +34,6 @@ func (s InMarigan) Exec(ctx *Context) error {
 		return err
 	}
 
-	ctx.SetState(&InPlay{})
+	ctx.SetState(&InGame{})
 	return nil
 }

@@ -3,43 +3,43 @@ package hero
 import "github.com/hatajoe/hatastone/player/card"
 
 type Hero struct {
-	life      int
-	equipment card.IEquipment
+	Life      int
+	Equipment card.IEquipment
 }
 
 func NewHero(life int) *Hero {
 	return &Hero{
-		life: life,
+		Life: life,
 	}
 }
 
 func (h Hero) IsDead() bool {
-	return h.life <= 0
+	return h.Life <= 0
 }
 
 func (h Hero) GetLife() int {
-	return h.life
+	return h.Life
 }
 
 func (h Hero) GetEquipment() card.IEquipment {
-	return h.equipment
+	return h.Equipment
 }
 
 func (h *Hero) AttachEquipment(e card.IEquipment) {
-	h.equipment = e
+	h.Equipment = e
 }
 
 func (h *Hero) DetachEquipment() {
-	h.equipment = nil
+	h.Equipment = nil
 }
 
 func (h Hero) GetAttack() int {
-	if h.equipment == nil {
+	if h.Equipment == nil {
 		return 0
 	}
-	return h.equipment.GetAttack()
+	return h.Equipment.GetAttack()
 }
 
 func (h *Hero) AcceptAttack(damage int) {
-	h.life -= damage
+	h.Life -= damage
 }

@@ -1,9 +1,9 @@
 package card
 
-type entity struct {
-	id string
+type Entity struct {
+	ID string
 }
 
-func (e entity) GetID() string {
-	return e.id
+func (e Entity) GetID() string {
+	return e.ID
 }

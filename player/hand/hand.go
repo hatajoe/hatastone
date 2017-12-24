@@ -3,7 +3,7 @@ package hand
 import "github.com/hatajoe/hatastone/player/card"
 
 type Hand struct {
-	cards card.Cards
+	Cards card.Cards
 }
 
 func NewHand() *Hand {
@@ -11,15 +11,15 @@ func NewHand() *Hand {
 }
 
 func (h Hand) GetCards() card.Cards {
-	return h.cards
+	return h.Cards
 }
 
 func (h *Hand) Add(c card.ICard) {
-	h.cards = append(h.cards, c)
+	h.Cards = append(h.Cards, c)
 }
 
 func (h *Hand) RemoveByID(id string) card.ICard {
-	c := h.cards.FindByID(id)
-	h.cards.DeleteByID(id)
+	c := h.Cards.FindByID(id)
+	h.Cards.DeleteByID(id)
 	return c
 }

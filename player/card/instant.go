@@ -1,17 +1,17 @@
 package card
 
 type Instant struct {
-	entity
-	spel
+	Entity
+	Spel
 }
 
 func NewInstant(id string, atk int) *Instant {
 	return &Instant{
-		entity: entity{
-			id: id,
+		Entity: Entity{
+			ID: id,
 		},
-		spel: spel{
-			atk: atk,
+		Spel: Spel{
+			Atk: atk,
 		},
 	}
 }

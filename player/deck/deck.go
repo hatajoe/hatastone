@@ -6,30 +6,30 @@ import (
 )
 
 type Deck struct {
-	hero  hero.IHero
-	cards card.Cards
+	Hero  hero.IHero
+	Cards card.Cards
 }
 
 func NewDeck(h hero.IHero, c []card.ICard) *Deck {
 	return &Deck{
-		hero:  h,
-		cards: c,
+		Hero:  h,
+		Cards: c,
 	}
 }
 
 func (d Deck) GetHero() hero.IHero {
-	return d.hero
+	return d.Hero
 }
 
 func (d *Deck) Add(c card.ICard) {
-	d.cards = append(d.cards, c)
+	d.Cards = append(d.Cards, c)
 }
 
 func (d *Deck) Remove() card.ICard {
-	if len(d.cards) <= 0 {
+	if len(d.Cards) <= 0 {
 		return nil
 	}
-	c := d.cards[0]
-	d.cards = d.cards[1:]
+	c := d.Cards[0]
+	d.Cards = d.Cards[1:]
 	return c
 }

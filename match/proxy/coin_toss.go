@@ -1,10 +1,9 @@
 package proxy
 
 import (
-	"fmt"
-
 	"github.com/hatajoe/hatastone/apps"
 	"github.com/hatajoe/hatastone/match/event"
+	"github.com/hatajoe/hatastone/match/protocol"
 	"github.com/hatajoe/hatastone/player/context/match"
 )
 
@@ -20,12 +19,12 @@ func NewCoinTossProxy(p match.IPlayer) *CoinTossProxy {
 	}
 }
 
-func (p *CoinTossProxy) Listen(r apps.Reader, w apps.Writer) event.IEvent {
+func (p *CoinTossProxy) Listen(ctrl apps.Controller) event.IEvent {
 	ch := make(event.CoinToss)
 
 	go func() {
 		for n := range ch {
-			w.Write([]byte(fmt.Sprintf("%s order is %d\n", p.p.GetID(), n.GetOrder())))
+			ctrl.Write(protocol.NewCoinTossProtocol(p.p, n.GetOrder()))
 			n.Done()
 		}
 	}()

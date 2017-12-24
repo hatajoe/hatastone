@@ -2,10 +2,10 @@ package proxy
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/hatajoe/hatastone/apps"
 	"github.com/hatajoe/hatastone/match/event"
+	"github.com/hatajoe/hatastone/match/protocol"
 	"github.com/hatajoe/hatastone/player/context/match"
 )
 
@@ -21,29 +21,29 @@ func NewMariganProxy(p match.IPlayer) *MariganProxy {
 	}
 }
 
-func (p *MariganProxy) Listen(r apps.Reader, w apps.Writer) event.IEvent {
+func (p *MariganProxy) Listen(ctrl apps.Controller) event.IEvent {
 	ch := make(event.Marigan)
 
 	go func() {
 		for n := range ch {
-			id := []string{}
 			for {
-				w.Write([]byte(fmt.Sprintf("player %s marigan", p.p.GetID())))
-				for _, c := range p.p.ShowHands() {
-					w.Write([]byte(fmt.Sprintf("player %s card %#v", p.p.GetID(), c.GetID())))
-				}
-				buf, err := r.Read()
+				ctrl.Write(protocol.NewMariganWrite(p.p, nil))
+				it, err := ctrl.Read()
 				if err != nil {
-					w.Write([]byte(err.Error()))
+					ctrl.Write(protocol.NewMariganWrite(p.p, err))
 					continue
 				}
-				id = strings.Split(string(buf), ",")
-				c := p.p.Marigan(id)
+				mariganRead, ok := it.(*protocol.MariganRead)
+				if !ok {
+					ctrl.Write(protocol.NewMariganWrite(p.p, fmt.Errorf("unexpected type specified. expected=*protocol.MariganRead, actual=%T", mariganRead)))
+					continue
+				}
+				c := p.p.Marigan(mariganRead.GetID())
 				if len(c) <= 0 {
-					w.Write([]byte(fmt.Sprintf("%s deck is empty", p.p.GetID())))
+					ctrl.Write(protocol.NewMariganWrite(p.p, fmt.Errorf("deck is empty")))
 					continue
 				}
-				w.Write([]byte(fmt.Sprintf("%s marigan %s", p.p.GetID(), strings.Join(c.GetID(), ", "))))
+				ctrl.Write(protocol.NewMariganWrite(p.p, nil))
 				break
 			}
 			n.Done()

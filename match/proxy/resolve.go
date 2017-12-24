@@ -16,7 +16,7 @@ func NewResolveProxy(err chan error) *ResolveProxy {
 	}
 }
 
-func (p *ResolveProxy) Listen(r apps.Reader, w apps.Writer) event.IEvent {
+func (p *ResolveProxy) Listen(ctrl apps.Controller) event.IEvent {
 	ch := make(event.Resolve)
 
 	go func() {

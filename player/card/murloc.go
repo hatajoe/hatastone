@@ -1,18 +1,18 @@
 package card
 
 type Murloc struct {
-	entity
-	minion
+	Entity
+	Minion
 }
 
 func NewMurloc(id string, atk int, life int) *Murloc {
 	return &Murloc{
-		entity: entity{
-			id: id,
+		Entity: Entity{
+			ID: id,
 		},
-		minion: minion{
-			atk:  atk,
-			life: life,
+		Minion: Minion{
+			Atk:  atk,
+			Life: life,
 		},
 	}
 }

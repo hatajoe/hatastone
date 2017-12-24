@@ -1,9 +1,6 @@
 package apps
 
-type Reader interface {
-	Read() ([]byte, error)
-}
-
-type Writer interface {
-	Write([]byte) error
+type Controller interface {
+	Read() (interface{}, error)
+	Write(interface{}) error
 }

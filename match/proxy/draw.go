@@ -1,10 +1,9 @@
 package proxy
 
 import (
-	"fmt"
-
 	"github.com/hatajoe/hatastone/apps"
 	"github.com/hatajoe/hatastone/match/event"
+	"github.com/hatajoe/hatastone/match/protocol"
 	"github.com/hatajoe/hatastone/player/context/match"
 )
 
@@ -20,16 +19,13 @@ func NewDrawProxy(p match.IPlayer) *DrawProxy {
 	}
 }
 
-func (p *DrawProxy) Listen(r apps.Reader, w apps.Writer) event.IEvent {
+func (p *DrawProxy) Listen(ctrl apps.Controller) event.IEvent {
 	ch := make(event.Draw)
 
 	go func() {
 		for n := range ch {
 			c := p.p.Draw()
-			if c == nil {
-				w.Write([]byte(fmt.Sprintf("%s deck is empty", p.p.GetID())))
-			}
-			w.Write([]byte(fmt.Sprintf("%s draw %s", p.p.GetID(), c.GetID())))
+			ctrl.Write(protocol.NewDrawProtocol(p.p, c))
 			n.Done()
 		}
 	}()

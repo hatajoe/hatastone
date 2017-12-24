@@ -1,9 +1,9 @@
 package card
 
-type spel struct {
-	atk int
+type Spel struct {
+	Atk int
 }
 
-func (s spel) GetAttack() int {
-	return s.atk
+func (s Spel) GetAttack() int {
+	return s.Atk
 }

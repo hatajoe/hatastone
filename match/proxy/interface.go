@@ -6,5 +6,5 @@ import (
 )
 
 type IProxy interface {
-	Listen(r apps.Reader, w apps.Writer) event.IEvent
+	Listen(apps.Controller) event.IEvent
 }

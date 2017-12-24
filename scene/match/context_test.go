@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/hatajoe/hatastone/apps/console"
+	"github.com/hatajoe/hatastone/apps/console/controllers"
 	"github.com/hatajoe/hatastone/match/event"
 	"github.com/hatajoe/hatastone/match/proxy"
 	"github.com/hatajoe/hatastone/match/rule"
@@ -46,24 +46,22 @@ func TestExec(t *testing.T) {
 		field.NewField(),
 		discard.NewDiscard(),
 	)
-	r := &console.Reader{}
-	w := &console.Writer{}
 
-	p1CoinTossCh := proxy.NewCoinTossProxy(p1).Listen(r, w).(event.CoinToss)
+	p1CoinTossCh := proxy.NewCoinTossProxy(p1).Listen(&controllers.CoinToss{}).(event.CoinToss)
 	defer close(p1CoinTossCh)
-	p2CoinTossCh := proxy.NewCoinTossProxy(p2).Listen(r, w).(event.CoinToss)
+	p2CoinTossCh := proxy.NewCoinTossProxy(p2).Listen(&controllers.CoinToss{}).(event.CoinToss)
 	defer close(p2CoinTossCh)
-	p1DrawCh := proxy.NewDrawProxy(p1).Listen(r, w).(event.Draw)
+	p1DrawCh := proxy.NewDrawProxy(p1).Listen(&controllers.Draw{}).(event.Draw)
 	defer close(p1DrawCh)
-	p2DrawCh := proxy.NewDrawProxy(p2).Listen(r, w).(event.Draw)
+	p2DrawCh := proxy.NewDrawProxy(p2).Listen(&controllers.Draw{}).(event.Draw)
 	defer close(p2DrawCh)
-	p1MariganCh := proxy.NewMariganProxy(p1).Listen(r, w).(event.Marigan)
+	p1MariganCh := proxy.NewMariganProxy(p1).Listen(&controllers.Marigan{}).(event.Marigan)
 	defer close(p1MariganCh)
-	p2MariganCh := proxy.NewMariganProxy(p2).Listen(r, w).(event.Marigan)
+	p2MariganCh := proxy.NewMariganProxy(p2).Listen(&controllers.Marigan{}).(event.Marigan)
 	defer close(p2MariganCh)
-	p1PlayCh := proxy.NewPlayProxy(p1).Listen(r, w).(event.Play)
+	p1PlayCh := proxy.NewPlayProxy(p1).Listen(&controllers.Play{}).(event.Game)
 	defer close(p1PlayCh)
-	p2PlayCh := proxy.NewPlayProxy(p2).Listen(r, w).(event.Play)
+	p2PlayCh := proxy.NewPlayProxy(p2).Listen(&controllers.Play{}).(event.Game)
 	defer close(p2PlayCh)
 
 	ctx := NewContext(

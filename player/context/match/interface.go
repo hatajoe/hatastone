@@ -2,6 +2,7 @@ package match
 
 import (
 	"github.com/hatajoe/hatastone/player/card"
+	"github.com/hatajoe/hatastone/player/hand"
 	"github.com/hatajoe/hatastone/player/hero"
 )
 
@@ -11,7 +12,7 @@ type IPlayer interface {
 	Marigan(id []string) card.Cards
 	Play(id string, pos int) (card.ICard, error)
 	GetHero() hero.IHero
-	ShowHands() card.Cards
+	GetHand() hand.IHand
 	FindFieldMinionByID(id string) card.IMinion
 	IsHeroDead() bool
 	DiscardFromHand(id string) error

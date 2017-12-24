@@ -2,10 +2,10 @@ package proxy
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/hatajoe/hatastone/apps"
 	"github.com/hatajoe/hatastone/match/event"
+	"github.com/hatajoe/hatastone/match/protocol"
 	"github.com/hatajoe/hatastone/match/resolver"
 	"github.com/hatajoe/hatastone/player/context/match"
 )
@@ -22,42 +22,47 @@ func NewPlayProxy(p match.IPlayer) *PlayProxy {
 	}
 }
 
-func (p *PlayProxy) Listen(r apps.Reader, w apps.Writer) event.IEvent {
-	ch := make(event.Play)
+func (p *PlayProxy) Listen(ctrl apps.Controller) event.IEvent {
+	ch := make(event.Game)
 
 	go func() {
 		for n := range ch {
-			w.Write([]byte(fmt.Sprintf("player %s play", p.p.GetID())))
-			for _, c := range p.p.ShowHands() {
-				w.Write([]byte(fmt.Sprintf("player %s hands %#v", p.p.GetID(), c.GetID())))
-			}
-			buf, err := r.Read()
+			ctrl.Write(protocol.NewGameWrite(p.p, n.GetOpponent(), nil))
+			it, err := ctrl.Read()
 			if err != nil {
-				w.Write([]byte(err.Error()))
+				ctrl.Write(protocol.NewGameWrite(nil, nil, err))
+				n.Done()
 				continue
 			}
-			id := strings.Split(string(buf), ",")
-
-			card, err := p.p.Play(id[0], 0)
-			if err != nil {
-				w.Write([]byte(err.Error()))
+			reader, ok := it.(*protocol.GameRead)
+			if !ok {
+				ctrl.Write(protocol.NewGameWrite(nil, nil, fmt.Errorf("unexpected type specified. expected=*protocol.PlayRead, actual=%T", reader)))
+				n.Done()
+				continue
 			}
-			w.Write([]byte(fmt.Sprintf("%s play %s\n", p.p.GetID(), card.GetID())))
+
+			_, err = p.p.Play(reader.GetID(), reader.GetPos())
+			if err != nil {
+				ctrl.Write(protocol.NewGameWrite(nil, nil, err))
+				n.Done()
+				continue
+			}
 
 			events := n.GetEvents()
 			ev := events.FindByID(event.GetResolveEventID())
 			if ev == nil {
-				w.Write([]byte(fmt.Sprintf("event is nil. id is %s", event.GetResolveEventID())))
+				ctrl.Write(protocol.NewGameWrite(nil, nil, fmt.Errorf("event is nil. id is %s", event.GetResolveEventID())))
+				n.Done()
+				continue
 			}
 			d := make(event.Done)
-			if err := ev.Emit(event.NewResolveNotify(&resolver.Attack{}, p.p.FindFieldMinionByID(id[1]), n.GetOpponent().GetHero(), d)); err != nil {
-				w.Write([]byte(err.Error()))
+			if err := ev.Emit(event.NewResolveNotify(&resolver.Attack{}, p.p.FindFieldMinionByID(reader.GetID()), n.GetOpponent().GetHero(), d)); err != nil {
+				ctrl.Write(protocol.NewGameWrite(nil, nil, err))
 			}
 			<-d
 			close(d)
 			n.Done()
-			w.Write([]byte(fmt.Sprintf("player %s's hero life is %d", p.p.GetID(), p.p.GetHero().GetLife())))
-			w.Write([]byte(fmt.Sprintf("player %s's hero life is %d", n.GetOpponent().GetID(), n.GetOpponent().GetHero().GetLife())))
+			ctrl.Write(protocol.NewGameWrite(p.p, n.GetOpponent(), nil))
 		}
 	}()
 

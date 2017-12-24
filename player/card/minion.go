@@ -1,21 +1,21 @@
 package card
 
-type minion struct {
-	atk  int
-	life int
+type Minion struct {
+	Atk  int
+	Life int
 }
 
-func (m minion) GetLife() int {
-	return m.life
+func (m Minion) GetLife() int {
+	return m.Life
 }
 
-func (m minion) GetAttack() int {
-	return m.atk
+func (m Minion) GetAttack() int {
+	return m.Atk
 }
 
-func (m *minion) AcceptAttack(damage int) {
-	m.life -= damage
-	if m.life < 0 {
-		m.life = 0
+func (m *Minion) AcceptAttack(damage int) {
+	m.Life -= damage
+	if m.Life < 0 {
+		m.Life = 0
 	}
 }

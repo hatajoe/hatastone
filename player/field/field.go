@@ -7,7 +7,7 @@ import (
 )
 
 type Field struct {
-	cards card.Minions
+	Cards card.Minions
 }
 
 func NewField() *Field {
@@ -15,25 +15,25 @@ func NewField() *Field {
 }
 
 func (f Field) GetMinions() card.Minions {
-	return f.cards
+	return f.Cards
 }
 
 func (f *Field) Add(c card.IMinion, pos int) error {
-	if pos < 0 || len(f.cards) < pos {
-		return fmt.Errorf("out of range error. expected <= %d, actual=%d", len(f.cards), pos)
+	if pos < 0 || len(f.Cards) < pos {
+		return fmt.Errorf("out of range error. expected <= %d, actual=%d", len(f.Cards), pos)
 	}
-	f.cards = append(f.cards[:pos], append(card.Minions{c}, f.cards[pos:]...)...)
+	f.Cards = append(f.Cards[:pos], append(card.Minions{c}, f.Cards[pos:]...)...)
 	return nil
 }
 
 func (f *Field) RemoveByID(id string) card.IMinion {
-	c := f.cards.FindByID(id)
-	f.cards.DeleteByID(id)
+	c := f.Cards.FindByID(id)
+	f.Cards.DeleteByID(id)
 	return c
 }
 
 func (f *Field) FindByID(id string) card.IMinion {
-	for _, m := range f.cards {
+	for _, m := range f.Cards {
 		if m.GetID() == id {
 			return m
 		}
